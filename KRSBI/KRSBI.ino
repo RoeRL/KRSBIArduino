@@ -68,7 +68,7 @@ void loop() {
   // signal (PWM) to specific pin at a specific "duty cycle".
   // Valid values are 0 to 255.  0 means always off(or no power) and 255 means always on(full power)
   // https://www.arduino.cc/reference/en/language/functions/analog-io/analogwrite/// wait 5 seconds, motor continues to move because the analogWrite is still pulsing
-  analogWrite(RPWM, 255); // pulse signal now at 128 (about half power... half of max 255).
+  analogWrite(RPWM, 128); // pulse signal now at 128 (about half power... half of max 255).
 
 
   // after 5 seconds at half power, stop the motor moving
@@ -77,7 +77,7 @@ void loop() {
   // now start moving in opposite direction.
   analogWrite(LPWM, 64);
   delay(1000);
-  analogWrite(LPWM, 255);
+  analogWrite(LPWM, 128);
   delay(1000);
   analogWrite(LPWM, 0); // Stop moving in this direction
   // at this point should be no movement.
@@ -86,5 +86,32 @@ void loop() {
 }
 
 void forward(){
-  
+  analogWrite(RWPM1, 128);
+  analogWrite(LWPM2, 128);
+}
+
+void backward(){
+  analogWrite(LPWM1, 128);
+  analogWrite(RWPM2, 128);
+}
+
+void right(){
+  analogWrite(RPWM1, 128);
+  analogWrite(RPWM2, 128);
+  analogWrite(LPWM3, 128);
+}
+
+void left(){
+  analogWrite(LPWM1, 128);
+  analogWrite(LPWM2, 128);
+  analogWrite(RWPM3, 128);
+}
+
+void stop(){
+  analogWrite(LPWM1, 0);
+  analogWrite(LPWM2, 0);
+  analogWrite(LWPM3, 0);
+  analogWrite(RWPM1, 0);
+  analogWrite(RWPM2, 0);
+  analogWrite(RWPM3, 0);
 }
