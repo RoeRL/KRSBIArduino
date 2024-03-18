@@ -38,7 +38,7 @@ void setup() {
   }
   delay(1000);// wait a second
   Serial.begin(9600);
-  stop();
+  stops();
   
   //enable "Right" and "Left" movement on the HBridge
   // Notice use of digitalWrite to simply turn it on and keep it on.
@@ -53,31 +53,42 @@ void loop() {
   // signal (PWM) to specific pin at a specific "duty cycle".
   // Valid values are 0 to 255.  0 means always off(or no power) and 255 means always on(full power)
   // https://www.arduino.cc/reference/en/language/functions/analog-io/analogwrite/// wait 5 seconds, motor continues to move because the analogWrite is still pulsing
-  forward();
-  delay(1000);
-  stop();
-  delay(1000);
 
-  backward();
-  delay(1000);
-  stop();
-  delay(1000);
-
-  right();
-  delay(1000);
-  stop();
-  delay(1000);
+  if(Serial.available()){
+    char input = Serial.read();
+      if (input=='W'){
+        forward();
+        Serial.println("MAJU");
+        delay(1000);
+      }
+      if (input=='A'){
+        left();
+        Serial.println("KIRI");
+        delay(500);
+      }
+      if (input=='S'){
+        backward();
+        Serial.println("MUNDUR");
+        delay(500);
+      }
+      if (input=='D'){
+        right();
+        Serial.println("KANAN");
+        delay(500);
+      }
+      stops();
+  }
 
 }
 
 void forward(){
   analogWrite(RPWM1, 255);
-  analogWrite(LPWM2, 255);
+  analogWrite(RPWM2, 255);
 }
 
 void backward(){
   analogWrite(LPWM1, 255);
-  analogWrite(RPWM2, 255);
+  analogWrite(LPWM2, 255);
 }
 
 void right(){
@@ -92,7 +103,7 @@ void left(){
   analogWrite(RPWM3, 255);
 }
 
-void stop(){
+void stops(){
   analogWrite(LPWM1, 0);
   analogWrite(LPWM2, 0);
   analogWrite(LPWM3, 0);
