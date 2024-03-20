@@ -63,7 +63,7 @@ void loop() {
       }
       if (input=='A'){
         left();
-        Serial.println("KIRI");
+        Serial.println("MUTER KIRI");
         delay(500);
       }
       if (input=='S'){
@@ -73,7 +73,7 @@ void loop() {
       }
       if (input=='D'){
         right();
-        Serial.println("KANAN");
+        Serial.println("MUTER KANAN");
         delay(500);
       }
       stops();
