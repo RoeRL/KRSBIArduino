@@ -27,7 +27,7 @@ void pwm_val( const geometry_msgs::Point32& pwm_value){
   int x = pwm_value.x;
   int y = pwm_value.y;
   int z = pwm_value.z;
-
+  
   motor1(x);
   motor2(y);
   motor3(z);
@@ -74,7 +74,7 @@ void stops(){
 void motor1(int x)
 {
   if (x < 0){
-    analogWrite(RPWM1, x);
+    analogWrite(RPWM1, abs(x));
   }
   else if (x > 0) {
     analogWrite(LPWM1, x);
@@ -88,7 +88,7 @@ void motor1(int x)
 void motor2(int y)
 {
   if (y < 0){
-    analogWrite(RPWM2, y);
+    analogWrite(RPWM2, abs(y));
   }
   else if (y > 0) {
     analogWrite(LPWM2, y);
@@ -102,7 +102,7 @@ void motor2(int y)
 void motor3(int z)
 {
   if (z < 0){
-    analogWrite(RPWM3, z);
+    analogWrite(RPWM3, abs(z));
   }
   else if (z > 0) {
     analogWrite(LPWM3, z);
