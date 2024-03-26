@@ -24,9 +24,9 @@ ros::NodeHandle nh;
 
 void pwm_val( const geometry_msgs::Point32& pwm_value){
   int pwm = 0;
-  int x = pwm_value.x;
-  int y = pwm_value.y;
-  int z = pwm_value.z;
+  int x = pwm_value.x*255;
+  int y = pwm_value.y*255;
+  int z = pwm_value.z*255;
   
   motor1(x);
   motor2(y);
