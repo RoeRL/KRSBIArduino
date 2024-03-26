@@ -1,14 +1,7 @@
-/*......................
- *  BTS7960 HBridge Test
- *  
- *  Simple example of using the BTS7960 HBridge to control a motor
- *  This sketch simply sends a pwm signal to the HBridge to spin the motor 
- *  one way and then spin the motor the other direction.
- *  
- *  PWM Description for Arduino: https://www.arduino.cc/en/tutorial/PWM
- *  
- *  By : Barry Tarlton
-*/
+#include <ros.h>
+//#include <std_msgs/Empty.h>
+#include <geometry_msgs/Point32.h>
+
 // Set the pin out for the Right PWM and Left PWM
 // "Right" and "Left" are relative to the motor direction and 
 // doesn't make sense from a programming point of view sense 
@@ -27,9 +20,26 @@ int RPWM3 = 3;  // Digital/PWM pin 5 to the RPWM on the BTS7960
 int LPWM3 = 2;  // Digital/PWM pin 6 to the LPWM on the BTS7960
 // Enable "Left" and "Right" movement for the third wheel
 
+ros::NodeHandle nh;
 
+void pwm_val( const geometry_msgs::Point32& pwm_value){
+  int pwm = 0;
+  int x = pwm_value.x*255;
+  int y = pwm_value.y*255;
+  int z = pwm_value.z*255;
+  
+  motor1(x);
+  motor2(y);
+  motor3(z);
+  
+  return x;
+  
+}
 
-void setup() {
+ros::Subscriber<geometry_msgs::Point32> pwm("video_topic", &pwm_val );
+
+void setup()
+{
   // put your setup code here, to run once:
 
   // initialize all our pins to output
@@ -42,65 +52,14 @@ void setup() {
   
   //enable "Right" and "Left" movement on the HBridge
   // Notice use of digitalWrite to simply turn it on and keep it on.
+  nh.initNode();
+  nh.subscribe(pwm);
 }
 
-
-
-void loop() {
-  // put your main code here, to run repeatedly:
-
-  // Use an analogWrite(pin,  which tells it to send a modulated
-  // signal (PWM) to specific pin at a specific "duty cycle".
-  // Valid values are 0 to 255.  0 means always off(or no power) and 255 means always on(full power)
-  // https://www.arduino.cc/reference/en/language/functions/analog-io/analogwrite/// wait 5 seconds, motor continues to move because the analogWrite is still pulsing
-
-  if(Serial.available()){
-    char input = Serial.read();
-      if (input=='W'){
-        forward();
-        Serial.println("MAJU");
-        delay(1000);
-      }
-      if (input=='A'){
-        left();
-        Serial.println("KIRI");
-        delay(500);
-      }
-      if (input=='S'){
-        backward();
-        Serial.println("MUNDUR");
-        delay(500);
-      }
-      if (input=='D'){
-        right();
-        Serial.println("KANAN");
-        delay(500);
-      }
-      stops();
-  }
-
-}
-/// ini forward
-void forward(){
-  analogWrite(RPWM1, 255);
-  analogWrite(RPWM2, 255);
-}
-
-void backward(){
-  analogWrite(LPWM1, 255);
-  analogWrite(LPWM2, 255);
-}
-
-void right(){
-  analogWrite(RPWM1, 255);
-  analogWrite(RPWM2, 255);
-  analogWrite(LPWM3, 255);
-}
-
-void left(){
-  analogWrite(LPWM1, 255);
-  analogWrite(LPWM2, 255);
-  analogWrite(RPWM3, 255);
+void loop()
+{  
+  nh.spinOnce();
+  delay(1);
 }
 
 void stops(){
@@ -110,4 +69,46 @@ void stops(){
   analogWrite(RPWM1, 0);
   analogWrite(RPWM2, 0);
   analogWrite(RPWM3, 0);
+}
+
+void motor1(int x)
+{
+  if (x < 0){
+    analogWrite(RPWM1, abs(x));
+  }
+  else if (x > 0) {
+    analogWrite(LPWM1, x);
+  }
+  else {
+    analogWrite(LPWM1, 0);
+    analogWrite(RPWM1, 0);
+  }
+}
+
+void motor2(int y)
+{
+  if (y < 0){
+    analogWrite(RPWM2, abs(y));
+  }
+  else if (y > 0) {
+    analogWrite(LPWM2, y);
+  }
+  else {
+    analogWrite(LPWM2, y);
+    analogWrite(RPWM2, y);
+  }
+}
+
+void motor3(int z)
+{
+  if (z < 0){
+    analogWrite(RPWM3, abs(z));
+  }
+  else if (z > 0) {
+    analogWrite(LPWM3, z);
+  }
+  else {
+    analogWrite(LPWM3, z);
+    analogWrite(RPWM3, z);
+  }
 }
