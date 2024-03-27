@@ -92,14 +92,44 @@ void motor2(int y)
   int current_speed = 0;
   int stepping_speed = 20;
   if (y < 0){
-    analogWrite(RPWM2, abs(y));
+    while (current_speed != abs(y))
+    {
+      if (current_speed < abs(y))
+      {
+        current_speed = min(current_speed + speed_step, abs(y));
+      }else if (current_speed > abs(y)){
+        current_speed = max(current_speed - speed_step, abs(y));
+      }
+      analogWrite(RPWM2, abs(current_speed));
+      delay(10);
+    }
   }
   else if (y > 0) {
-    analogWrite(LPWM2, y);
+    while (current_speed != y)
+    {
+      if (current_speed < y)
+      {
+        current_speed = min(current_speed + speed_step, y);
+      }else if (current_speed > y){
+        current_speed = max(current_speed - speed_step, y);
+      }
+      analogWrite(LPWM2, current_speed);
+      delay(10);
+    }
   }
   else {
-    analogWrite(LPWM2, y);
-    analogWrite(RPWM2, y);
+    while (current_speed != y)
+    {
+      if (current_speed < y)
+      {
+        current_speed = min(current_speed + speed_step, y);
+      }else if (current_speed > y){
+        current_speed = max(current_speed - speed_step, y);
+      }
+      analogWrite(LPWM2, current_speed);
+      analogWrite(RPWM2, current_speed);
+      delay(10);
+    }
   }
 }
 
@@ -121,29 +151,29 @@ void motor3(int z)
     }
   }
   else if (z > 0) {
-    while (current_speed != abs(z))
+    while (current_speed != z)
     {
-      if (current_speed < abs(z))
+      if (current_speed < z)
       {
-        current_speed = min(current_speed + speed_step, abs(z));
-      }else if (current_speed > abs(z)){
-        current_speed = max(current_speed - speed_step, abs(z));
+        current_speed = min(current_speed + speed_step, z);
+      }else if (current_speed > z){
+        current_speed = max(current_speed - speed_step, z);
       }
-      analogWrite(LPWM3, abs(current_speed));
+      analogWrite(LPWM3, current_speed);
       delay(10);
     }
   }
   else {
-    while (current_speed != abs(z))
+    while (current_speed != z)
     {
-      if (current_speed < abs(z))
+      if (current_speed < z)
       {
-        current_speed = min(current_speed + speed_step, abs(z));
-      }else if (current_speed > abs(z)){
+        current_speed = min(current_speed + speed_step, z);
+      }else if (current_speed > z){
         current_speed = max(current_speed - speed_step, abs(z));
       }
-      analogWrite(LPWM3, abs(current_speed));
-      analogWrite(RPWM3, abs(current_speed));
+      analogWrite(LPWM3, current_speed);
+      analogWrite(RPWM3, current_speed);
       delay(10);
     }
   }
