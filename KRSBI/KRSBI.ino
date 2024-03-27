@@ -73,6 +73,8 @@ void stops(){
 
 void motor1(int x)
 {
+  int current_speed = 0;
+  int stepping_speed = 20;
   if (x < 0){
     analogWrite(RPWM1, abs(x));
   }
@@ -87,6 +89,8 @@ void motor1(int x)
 
 void motor2(int y)
 {
+  int current_speed = 0;
+  int stepping_speed = 20;
   if (y < 0){
     analogWrite(RPWM2, abs(y));
   }
@@ -101,14 +105,63 @@ void motor2(int y)
 
 void motor3(int z)
 {
+  int current_speed = 0;
+  int stepping_speed = 20;
   if (z < 0){
-    analogWrite(RPWM3, abs(z));
+    while (current_speed != abs(z))
+    {
+      if (current_speed < abs(z))
+      {
+        current_speed = min(current_speed + speed_step, abs(z));
+      }else if (current_speed > abs(z)){
+        current_speed = max(current_speed - speed_step, abs(z));
+      }
+      analogWrite(RPWM3, abs(current_speed));
+      delay(10);
+    }
   }
   else if (z > 0) {
-    analogWrite(LPWM3, z);
+    while (current_speed != abs(z))
+    {
+      if (current_speed < abs(z))
+      {
+        current_speed = min(current_speed + speed_step, abs(z));
+      }else if (current_speed > abs(z)){
+        current_speed = max(current_speed - speed_step, abs(z));
+      }
+      analogWrite(LPWM3, abs(current_speed));
+      delay(10);
+    }
   }
   else {
-    analogWrite(LPWM3, z);
-    analogWrite(RPWM3, z);
+    while (current_speed != abs(z))
+    {
+      if (current_speed < abs(z))
+      {
+        current_speed = min(current_speed + speed_step, abs(z));
+      }else if (current_speed > abs(z)){
+        current_speed = max(current_speed - speed_step, abs(z));
+      }
+      analogWrite(LPWM3, abs(current_speed));
+      analogWrite(RPWM3, abs(current_speed));
+      delay(10);
+    }
   }
+}
+
+void jalan(int target_speed){
+  int current_speed = 0;
+  int stepping_speed = 20;
+  while (current_speed != target_speed)
+  {
+    if (current_speed < target_speed)
+    {
+      current_speed = min(current_speed + speed_step, target_speed);
+    }else if (current_speed > target_speed){
+      current_speed = max(current_speed - speed_step, target_speed);
+    }
+    delay(10);
+  }
+  
+  
 }
