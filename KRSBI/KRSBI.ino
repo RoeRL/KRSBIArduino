@@ -76,14 +76,44 @@ void motor1(int x)
   int current_speed = 0;
   int stepping_speed = 20;
   if (x < 0){
-    analogWrite(RPWM1, abs(x));
+    while (current_speed != abs(x))
+    {
+      if (current_speed < abs(x))
+      {
+        current_speed = min(current_speed + speed_step, abs(x));
+      }else if (current_speed > abs(x)){
+        current_speed = max(current_speed - speed_step, abs(x));
+      }
+      analogWrite(RPWM1, abs(current_speed));
+      delay(10);
+    }
   }
   else if (x > 0) {
-    analogWrite(LPWM1, x);
+    while (current_speed != x)
+    {
+      if (current_speed < x)
+      {
+        current_speed = min(current_speed + speed_step, x);
+      }else if (current_speed > x){
+        current_speed = max(current_speed - speed_step, x);
+      }
+      analogWrite(LPWM1, abs(current_speed));
+      delay(10);
+    }
   }
   else {
-    analogWrite(LPWM1, 0);
-    analogWrite(RPWM1, 0);
+    while (current_speed != x)
+    {
+      if (current_speed < x)
+      {
+        current_speed = min(current_speed + speed_step, x);
+      }else if (current_speed > x){
+        current_speed = max(current_speed - speed_step, x);
+      }
+      analogWrite(LPWM1, abs(current_speed));
+      analogWrite(RPWM1, abs(current_speed));
+      delay(10);
+    }
   }
 }
 
