@@ -1,6 +1,9 @@
-#include <ros.h>
 //#include <std_msgs/Empty.h>
-#include <geometry_msgs/Point32.h>
+//#include <geometry_msgs/Point32.h>/
+#include <ros.h>
+#include <std_msgs/Float32.h>
+//encoder messages
+#include <encoder.h>
 
 // Set the pin out for the Right PWM and Left PWM
 // "Right" and "Left" are relative to the motor direction and 
@@ -22,11 +25,11 @@ int LPWM3 = 2;  // Digital/PWM pin 6 to the LPWM on the BTS7960
 
 ros::NodeHandle nh;
 
-void pwm_val( const geometry_msgs::Point32& pwm_value){
+void pwm_val( const robot_tf_pkg::encoder& pwm_value){
   int pwm = 0;
-  int x = pwm_value.x;
-  int y = pwm_value.y;
-  int z = pwm_value.z;
+  int x = pwm_value.enc1;
+  int y = pwm_value.enc2;
+  int z = pwm_value.enc3;
 
   motor1(x);
   motor2(y);
@@ -36,7 +39,7 @@ void pwm_val( const geometry_msgs::Point32& pwm_value){
   
 }
 
-ros::Subscriber<geometry_msgs::Point32> pwm("video_topic", &pwm_val );
+ros::Subscriber<robot_tf_pkg::encoder> pwm("motor_value", &pwm_val );
 
 void setup()
 {
