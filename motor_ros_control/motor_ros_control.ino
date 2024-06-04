@@ -31,12 +31,7 @@ void pwm_val( const robot_tf_pkg::encoder& pwm_value){
   int y = pwm_value.enc2;
   int z = pwm_value.enc3;
 
-  motor1(x);
-  motor2(y);
-  motor3(z);
-  
-  return x;
-  
+  motor(x,y,z);
 }
 
 ros::Subscriber<robot_tf_pkg::encoder> pwm("motor_value", &pwm_val );
@@ -46,7 +41,7 @@ void setup()
   // put your setup code here, to run once:
 
   // initialize all our pins to output
-  for (int i = 4; i < 29; i++) {
+  for (int i = 4; i < 99; i++) {
     pinMode(i, OUTPUT);
   }
   delay(1000);// wait a second
@@ -113,5 +108,41 @@ void motor3(int z)
   else {
     analogWrite(LPWM3, z);
     analogWrite(RPWM3, z);
+  }
+}
+
+void motor(int x, int y, int z)
+{
+  if (x < 0){
+    analogWrite(RPWM1, abs(x));
+  }
+  else if (x > 0) {
+    analogWrite(LPWM1, x);
+  }
+  else if (x == 0) {
+    analogWrite(LPWM1, 0);
+    analogWrite(RPWM1, 0);
+  }
+  
+  else if (y < 0){
+    analogWrite(RPWM2, abs(y));
+  }
+  else if (y > 0) {
+    analogWrite(LPWM2, y);
+  }
+  else if (y == 0) {
+    analogWrite(LPWM2, 0);
+    analogWrite(RPWM2, 0);
+  }
+
+    else if (z < 0){
+    analogWrite(RPWM3, abs(z));
+  }
+  else if (z > 0) {
+    analogWrite(LPWM3, z);
+  }
+  else if (z == 0) {
+    analogWrite(LPWM3, 0);
+    analogWrite(RPWM3, 0);
   }
 }
