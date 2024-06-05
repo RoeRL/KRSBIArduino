@@ -10,12 +10,12 @@
 
 //encoder enco;
 
-#define ENCA1 5
-#define ENCB1 4
-#define ENCA2 0
-#define ENCB2 2
-#define ENCA3 14
-#define ENCB3 12
+#define ENCA1 5 // D1
+#define ENCB1 4 // D2
+#define ENCA2 14 // D5
+#define ENCB2 12 // D6
+#define ENCA3 13 // D7
+#define ENCB3 15 // D6
 
 volatile int pos1 = 0;
 volatile int pos2 = 0;
@@ -62,12 +62,16 @@ void ICACHE_RAM_ATTR mot3(){
 
 void setup()
 {
+  pos1 = 0;
+  pos2 = 0;
+  pos3 = 0;
   jalan1();
   jalan2();
   jalan3();
   Serial.begin(115200);
   nh.initNode();
   nh.advertise(chatter);
+
 }
 
 void loop()
@@ -78,6 +82,7 @@ void loop()
   fl_msg.enc1 = pos1;
   fl_msg.enc2 = pos2;
   fl_msg.enc3 = pos3;
+//  fl_msg.enc3 = 0;
   chatter.publish( &fl_msg );
   nh.spinOnce();
   delay(1);

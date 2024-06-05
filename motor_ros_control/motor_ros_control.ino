@@ -1,6 +1,7 @@
 #include <ros.h>
-//#include <std_msgs/Empty.h>
-#include <geometry_msgs/Point32.h>
+#include <std_msgs/Float32.h>
+//encoder messages
+#include <encoder.h>
 
 // Set the pin out for the Right PWM and Left PWM
 // "Right" and "Left" are relative to the motor direction and 
@@ -8,45 +9,49 @@
 // depending on how you wire or physcally mount the motor the direction is different.
 // But when you send a signal on RPWM the motor will go one way and when you 
 // send a signal on LPWM, the motor will go the other way.
-int RPWM1 = 7;  // Digital/PWM pin 5 to the RPWM on the BTS7960
-int LPWM1 = 6;  // Digital/PWM pin 6 to the LPWM on the BTS7960
+int RPWM1 = 6;  // Digital/PWM pin 5 to the RPWM on the BTS7960
+int LPWM1 = 7;  // Digital/PWM pin 6 to the LPWM on the BTS7960
 // Enable "Left" and "Right" movement for the first wheel
 
-int RPWM2 = 5;  // Digital/PWM pin 5 to the RPWM on the BTS7960
-int LPWM2 = 4;  // Digital/PWM pin 6 to the LPWM on the BTS7960
+int RPWM2 = 4;  // Digital/PWM pin 5 to the RPWM on the BTS7960
+int LPWM2 = 5;  // Digital/PWM pin 6 to the LPWM on the BTS7960
 // Enable "Left" and "Right" movement for the second wheel
 
-int RPWM3 = 3;  // Digital/PWM pin 5 to the RPWM on the BTS7960
-int LPWM3 = 2;  // Digital/PWM pin 6 to the LPWM on the BTS7960
+int RPWM3 = 10;  // Digital/PWM pin 5 to the RPWM on the BTS7960
+int LPWM3 = 9;  // Digital/PWM pin 6 to the LPWM on the BTS7960
 // Enable "Left" and "Right" movement for the third wheel
-
+const int PWM_MIN = 1;
 ros::NodeHandle nh;
 
-void pwm_val( const geometry_msgs::Point32& pwm_value){
-  int pwm = 0;
-  int x = pwm_value.x;
-  int y = pwm_value.y;
-  int z = pwm_value.z;
+void pwm_val( const robot_tf_pkg::encoder& pwm_value){
+//  int pwm = 0;/
+  int xa = pwm_value.enc1;
+  int x = xa*255;
+  int ya = pwm_value.enc2;
+  int y = ya*255;
+  int za = pwm_value.enc3;
+  int z = za*255;
 
   motor1(x);
   motor2(y);
   motor3(z);
-  
-  return x;
-  
 }
 
-ros::Subscriber<geometry_msgs::Point32> pwm("video_topic", &pwm_val );
+ros::Subscriber<robot_tf_pkg::encoder> pwm("motor_value", &pwm_val );
 
 void setup()
 {
   // put your setup code here, to run once:
 
   // initialize all our pins to output
-  for (int i = 4; i < 29; i++) {
-    pinMode(i, OUTPUT);
-  }
-  delay(1000);// wait a second
+  pinMode(RPWM1, OUTPUT);
+  pinMode(LPWM1, OUTPUT);
+  pinMode(RPWM2, OUTPUT);
+  pinMode(LPWM2, OUTPUT);
+  pinMode(RPWM3, OUTPUT);
+  pinMode(LPWM3, OUTPUT);
+
+  delay(1000); // Wait a second
   Serial.begin(9600);
   stops();
   
@@ -73,42 +78,42 @@ void stops(){
 
 void motor1(int x)
 {
-  if (x < 0){
-    analogWrite(RPWM1, x);
-  }
-  else if (x > 0) {
-    analogWrite(LPWM1, x);
-  }
-  else {
+  if (x < 0) {
+    analogWrite(RPWM1, abs(x));
+    analogWrite(LPWM1, 0);
+  } else if (x > 0) {
+    analogWrite(LPWM1, constrain(abs(x), PWM_MIN, 255));
+    analogWrite(RPWM1, 0);
+  } else {
     analogWrite(LPWM1, 0);
     analogWrite(RPWM1, 0);
   }
 }
 
-void motor2(int y)
-{
-  if (y < 0){
-    analogWrite(RPWM2, y);
-  }
-  else if (y > 0) {
-    analogWrite(LPWM2, y);
-  }
-  else {
-    analogWrite(LPWM2, y);
-    analogWrite(RPWM2, y);
+void motor2(int y){
+  // Control motor 2
+  if (y < 0) {
+    analogWrite(RPWM2, abs(y));
+    analogWrite(LPWM2, 0);
+  } else if (y > 0) {
+    analogWrite(LPWM2, constrain(abs(y), PWM_MIN, 255));
+    analogWrite(RPWM2, 0);
+  } else {
+    analogWrite(LPWM2, 0);
+    analogWrite(RPWM2, 0);
   }
 }
 
-void motor3(int z)
-{
-  if (z < 0){
-    analogWrite(RPWM3, z);
-  }
-  else if (z > 0) {
-    analogWrite(LPWM3, z);
-  }
-  else {
-    analogWrite(LPWM3, z);
-    analogWrite(RPWM3, z);
+void motor3(int z){
+  // Control motor 3
+  if (z < 0) {
+    analogWrite(RPWM3, abs(z));
+    analogWrite(LPWM3, 0);
+  } else if (z > 0) {
+    analogWrite(LPWM3, constrain(abs(z), PWM_MIN, 255));
+    analogWrite(RPWM3, 0);
+  } else {
+    analogWrite(LPWM3, 0);
+    analogWrite(RPWM3, 0);
   }
 }
