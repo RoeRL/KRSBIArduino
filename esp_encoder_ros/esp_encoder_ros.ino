@@ -1,14 +1,7 @@
-/*
- * rosserial Publisher Example
- * Prints "hello world!"
- */
-
 #include <ros.h>
 #include <std_msgs/Float32.h>
 //encoder messages
 #include <encoder.h>
-
-//encoder enco;
 
 #define ENCA1 5 // D1
 #define ENCB1 4 // D2
