@@ -8,8 +8,8 @@ int LPWM1 = 7;
 int RPWM2 = 3;
 int LPWM2 = 2;
 
-int RPWM3 = 4;
-int LPWM3 = 5;
+int RPWM3 = 5;
+int LPWM3 = 4;
 
 ros::NodeHandle nh;
 

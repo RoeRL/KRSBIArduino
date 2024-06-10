@@ -3,10 +3,10 @@
 //encoder messages
 #include <encoder.h>
 
-#define ENCA1 5 // D1
-#define ENCB1 4 // D2
-#define ENCA2 14 // D5
-#define ENCB2 12 // D6
+#define ENCA1 14 // D1
+#define ENCB1 12 // D2
+#define ENCA2 5 // D5
+#define ENCB2 4 // D6
 #define ENCA3 13 // D7
 #define ENCB3 15 // D6
 
